@@ -1,12 +1,12 @@
-import { memo } from 'react';
+import { memo, useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Check, ArrowUpDown } from 'lucide-react';
 import { SORT_OPTIONS } from '../../constants/invoiceConstants';
 
 /**
  * SortDropdown Component
  * 
- * Dropdown to sort invoices by different fields and directions.
+ * Custom styled dropdown to sort invoices by different fields and directions.
  * Options:
  * - Amount (High to Low / Low to High)
  * - Invoice Date (Newest / Oldest)
@@ -17,46 +17,106 @@ import { SORT_OPTIONS } from '../../constants/invoiceConstants';
  * @param {Function} props.onChange - Callback when sort changes
  */
 function SortDropdown({ value, onChange }) {
-  const handleChange = (e) => {
-    onChange(e.target.value);
-  };
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  // Find current selected option
+  const selectedOption = SORT_OPTIONS.find(opt => opt.value === value) || SORT_OPTIONS[0];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen]);
+
+  const handleSelect = useCallback((optionValue) => {
+    onChange(optionValue);
+    setIsOpen(false);
+  }, [onChange]);
 
   return (
-    <div className="relative">
-      <label htmlFor="sort-select" className="sr-only">
-        Sort invoices
-      </label>
+    <div className="relative" ref={dropdownRef}>
+      <label className="sr-only">Sort invoices</label>
       
-      <select
-        id="sort-select"
-        value={value}
-        onChange={handleChange}
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
         className={`
-          appearance-none
-          w-full sm:w-48
-          pl-3 pr-10 py-2
-          text-sm text-gray-700 dark:text-gray-200
-          bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg
-          cursor-pointer
+          flex items-center justify-between gap-2
+          w-full sm:w-52
+          px-3 py-2
+          text-sm font-medium text-gray-700 dark:text-gray-200
+          bg-white dark:bg-gray-700 
+          border border-gray-300 dark:border-gray-600 rounded-lg
+          hover:bg-gray-50 dark:hover:bg-gray-600
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-          transition-colors duration-200
+          transition-all duration-200
+          ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
         `}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
         aria-label="Sort invoices by"
       >
-        {SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <div className="flex items-center gap-2 min-w-0">
+          <ArrowUpDown className="h-4 w-4 text-gray-400 flex-shrink-0" />
+          <span className="truncate">{selectedOption.label}</span>
+        </div>
+        <ChevronDown 
+          className={`h-4 w-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+        />
+      </button>
       
-      {/* Custom dropdown arrow */}
-      <div 
-        className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-        aria-hidden="true"
-      >
-        <ChevronDown className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-      </div>
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div 
+          className="absolute right-0 z-20 mt-1 w-full sm:w-52 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg py-1 animate-fade-in"
+          role="listbox"
+          aria-label="Sort options"
+        >
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => handleSelect(option.value)}
+              className={`
+                w-full flex items-center justify-between gap-2
+                px-3 py-2 text-sm text-left
+                transition-colors duration-150
+                ${option.value === value 
+                  ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' 
+                  : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }
+              `}
+              role="option"
+              aria-selected={option.value === value}
+            >
+              <span>{option.label}</span>
+              {option.value === value && (
+                <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

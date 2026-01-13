@@ -69,25 +69,29 @@ function EmptyState({
           flex items-center justify-center
           w-16 h-16 mb-4
           rounded-full
-          ${type === 'error' ? 'bg-red-100' : 'bg-gray-100'}
+          ${type === 'error' 
+            ? 'bg-red-100 dark:bg-red-900/30' 
+            : 'bg-gray-100 dark:bg-gray-700'}
         `}
         aria-hidden="true"
       >
         <IconComponent 
           className={`
             w-8 h-8
-            ${type === 'error' ? 'text-red-500' : 'text-gray-400'}
+            ${type === 'error' 
+              ? 'text-red-500 dark:text-red-400' 
+              : 'text-gray-400 dark:text-gray-500'}
           `}
         />
       </div>
       
       {/* Title */}
-      <h3 className="text-lg font-medium text-gray-900 mb-1">
+      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">
         {displayTitle}
       </h3>
       
       {/* Message */}
-      <p className="text-sm text-gray-500 max-w-sm mb-6">
+      <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
         {displayMessage}
       </p>
       

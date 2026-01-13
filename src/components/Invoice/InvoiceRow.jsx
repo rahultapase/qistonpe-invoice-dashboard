@@ -1,6 +1,6 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Check } from 'lucide-react';
+import { Check, CheckCircle } from 'lucide-react';
 import { Badge, Button } from '../UI';
 import { formatDate } from '../../utils/dateUtils';
 import { formatCurrencyINR, getDaysDisplay } from '../../utils/invoiceUtils';
@@ -11,12 +11,17 @@ import { INVOICE_STATUS } from '../../constants/invoiceConstants';
  * 
  * Single invoice row in the table.
  * Memoized to prevent unnecessary re-renders in large lists.
+ * Features micro-interactions for hover and selection states.
  * 
  * @param {Object} props - Component props
  * @param {Object} props.invoice - Invoice data object
  * @param {Function} props.onMarkAsPaid - Callback when "Mark as Paid" is clicked
+ * @param {boolean} props.isSelected - Whether the row is selected
+ * @param {Function} props.onToggleSelection - Callback to toggle selection
  */
-function InvoiceRow({ invoice, onMarkAsPaid }) {
+function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelection }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
   // Get display info for the Days column
   const daysDisplay = getDaysDisplay(invoice);
   
@@ -33,14 +38,55 @@ function InvoiceRow({ invoice, onMarkAsPaid }) {
     }
   }, [invoice.id, canMarkAsPaid, onMarkAsPaid]);
 
+  /**
+   * Handle row selection toggle
+   */
+  const handleToggleSelection = useCallback(() => {
+    if (onToggleSelection) {
+      onToggleSelection(invoice.id);
+    }
+  }, [invoice.id, onToggleSelection]);
+
   return (
     <tr 
-      className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150"
+      className={`
+        border-b border-gray-100 dark:border-gray-700 
+        transition-all duration-200 ease-out
+        ${isSelected 
+          ? 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30' 
+          : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+        }
+        ${isHovered ? 'shadow-sm' : ''}
+      `}
       data-invoice-id={invoice.id}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Checkbox for Selection */}
+      {onToggleSelection && (
+        <td className="w-10 px-2 sm:px-3 py-3 sm:py-4">
+          <button
+            type="button"
+            onClick={handleToggleSelection}
+            className={`
+              flex items-center justify-center w-5 h-5 rounded
+              transition-all duration-200 active:scale-90
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
+              ${isSelected 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-blue-400 dark:hover:border-blue-500'
+              }
+            `}
+            aria-label={isSelected ? `Deselect invoice ${invoice.id}` : `Select invoice ${invoice.id}`}
+          >
+            {isSelected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+          </button>
+        </td>
+      )}
+      
       {/* Invoice Number */}
       <td className="px-3 sm:px-4 py-3 sm:py-4">
-        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+        <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? 'text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-gray-100'}`}>
           {invoice.id}
         </span>
       </td>
@@ -77,7 +123,7 @@ function InvoiceRow({ invoice, onMarkAsPaid }) {
       
       {/* Amount */}
       <td className="px-3 sm:px-4 py-3 sm:py-4 text-right">
-        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
           {formatCurrencyINR(invoice.amount)}
         </span>
       </td>
@@ -101,14 +147,18 @@ function InvoiceRow({ invoice, onMarkAsPaid }) {
             variant="outline"
             size="sm"
             onClick={handleMarkAsPaid}
-            leftIcon={<Check className="h-3.5 w-3.5" />}
+            leftIcon={<CheckCircle className="h-3.5 w-3.5" />}
             aria-label={`Mark invoice ${invoice.id} as paid`}
+            className="active:scale-95 transition-transform"
           >
             <span className="hidden sm:inline">Mark Paid</span>
             <span className="sm:hidden">Paid</span>
           </Button>
         ) : (
-          <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
+          <span className="inline-flex items-center text-sm text-green-600 dark:text-green-400">
+            <CheckCircle className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Paid</span>
+          </span>
         )}
       </td>
     </tr>
@@ -127,7 +177,16 @@ InvoiceRow.propTypes = {
     status: PropTypes.oneOf(['paid', 'pending', 'overdue']).isRequired
   }).isRequired,
   /** Callback when "Mark as Paid" button is clicked */
-  onMarkAsPaid: PropTypes.func.isRequired
+  onMarkAsPaid: PropTypes.func.isRequired,
+  /** Whether the row is selected */
+  isSelected: PropTypes.bool,
+  /** Callback to toggle selection */
+  onToggleSelection: PropTypes.func
+};
+
+InvoiceRow.defaultProps = {
+  isSelected: false,
+  onToggleSelection: null
 };
 
 // Memoize to prevent re-renders when other invoices change

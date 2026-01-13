@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Square, CheckSquare, XSquare } from 'lucide-react';
 import StatusFilter from './StatusFilter';
 import SearchBar from './SearchBar';
 import SortDropdown from './SortDropdown';
@@ -10,7 +10,7 @@ import { Button } from '../UI';
  * FilterBar Component
  * 
  * Combined filter controls for the invoice list.
- * Includes status filter, search bar, and sort dropdown.
+ * Includes status filter, search bar, sort dropdown, and bulk selection.
  * Responsive layout: stacks on mobile, horizontal on larger screens.
  * 
  * @param {Object} props - Component props
@@ -23,6 +23,10 @@ import { Button } from '../UI';
  * @param {Function} props.onClearFilters - Callback to clear all filters
  * @param {boolean} props.hasActiveFilters - Whether any filters are active
  * @param {Object} props.statusCounts - Counts for each status
+ * @param {number} props.selectedCount - Number of selected invoices
+ * @param {number} props.totalCount - Total number of invoices
+ * @param {Function} props.onSelectAll - Callback to select all
+ * @param {Function} props.onDeselectAll - Callback to deselect all
  */
 function FilterBar({
   statusFilter,
@@ -33,7 +37,11 @@ function FilterBar({
   onSortChange,
   onClearFilters,
   hasActiveFilters,
-  statusCounts
+  statusCounts,
+  selectedCount = 0,
+  totalCount = 0,
+  onSelectAll,
+  onDeselectAll
 }) {
   // Calculate counts including 'all'
   const counts = statusCounts ? {
@@ -43,19 +51,71 @@ function FilterBar({
     overdue: statusCounts.overdue
   } : null;
 
+  const allSelected = totalCount > 0 && selectedCount === totalCount;
+  const someSelected = selectedCount > 0 && selectedCount < totalCount;
+
+  const handleToggleAll = () => {
+    if (allSelected) {
+      onDeselectAll?.();
+    } else {
+      onSelectAll?.();
+    }
+  };
+
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4 sm:mb-6 transition-colors duration-200"
+      className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4 sm:mb-6 transition-colors duration-200 shadow-sm"
       role="search"
       aria-label="Invoice filters"
     >
-      {/* Top Row: Status Filters */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <StatusFilter
-          activeStatus={statusFilter}
-          onStatusChange={onStatusChange}
-          counts={counts}
-        />
+      {/* Top Row: Status Filters + Select All */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          {/* Select All Button - Moved here */}
+          {totalCount > 0 && onSelectAll && (
+            <button
+              type="button"
+              onClick={handleToggleAll}
+              className={`
+                flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
+                transition-all duration-200 active:scale-95
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
+                ${allSelected 
+                  ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70' 
+                  : someSelected
+                    ? 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                }
+              `}
+              aria-label={allSelected ? 'Deselect all invoices' : 'Select all invoices'}
+            >
+              {allSelected ? (
+                <XSquare className="h-4 w-4" aria-hidden="true" />
+              ) : someSelected ? (
+                <CheckSquare className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Square className="h-4 w-4" aria-hidden="true" />
+              )}
+              <span className="hidden sm:inline">
+                {allSelected ? 'Deselect' : someSelected ? `${selectedCount} selected` : 'Select All'}
+              </span>
+              {selectedCount > 0 && !allSelected && (
+                <span className="sm:hidden">{selectedCount}</span>
+              )}
+            </button>
+          )}
+          
+          {/* Divider */}
+          {totalCount > 0 && onSelectAll && (
+            <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-gray-700" />
+          )}
+          
+          <StatusFilter
+            activeStatus={statusFilter}
+            onStatusChange={onStatusChange}
+            counts={counts}
+          />
+        </div>
         
         {/* Clear Filters Button (only show when filters active) */}
         {hasActiveFilters && (
@@ -66,7 +126,8 @@ function FilterBar({
             leftIcon={<RotateCcw className="h-4 w-4" />}
             aria-label="Clear all filters"
           >
-            Clear Filters
+            <span className="hidden sm:inline">Clear Filters</span>
+            <span className="sm:hidden">Clear</span>
           </Button>
         )}
       </div>
@@ -116,13 +177,25 @@ FilterBar.propTypes = {
     paid: PropTypes.number,
     pending: PropTypes.number,
     overdue: PropTypes.number
-  })
+  }),
+  /** Number of selected invoices */
+  selectedCount: PropTypes.number,
+  /** Total number of invoices */
+  totalCount: PropTypes.number,
+  /** Callback to select all invoices */
+  onSelectAll: PropTypes.func,
+  /** Callback to deselect all invoices */
+  onDeselectAll: PropTypes.func
 };
 
 FilterBar.defaultProps = {
   onClearFilters: () => {},
   hasActiveFilters: false,
-  statusCounts: null
+  statusCounts: null,
+  selectedCount: 0,
+  totalCount: 0,
+  onSelectAll: null,
+  onDeselectAll: null
 };
 
 export default memo(FilterBar);

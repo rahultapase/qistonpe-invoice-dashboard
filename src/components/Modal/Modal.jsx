@@ -152,7 +152,7 @@ function Modal({
           ref={modalRef}
           className={`
             relative w-full ${sizeClasses[size]}
-            bg-white rounded-xl shadow-xl
+            bg-white dark:bg-gray-800 rounded-xl shadow-xl
             transform transition-all
             animate-fade-in
           `}
@@ -162,11 +162,11 @@ function Modal({
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               {title && (
                 <h2 
                   id="modal-title" 
-                  className="text-lg font-semibold text-gray-900"
+                  className="text-lg font-semibold text-gray-900 dark:text-gray-100"
                 >
                   {title}
                 </h2>
@@ -177,8 +177,8 @@ function Modal({
                   type="button"
                   onClick={onClose}
                   className={`
-                    p-2 rounded-lg text-gray-400 
-                    hover:text-gray-600 hover:bg-gray-100
+                    p-2 rounded-lg text-gray-400 dark:text-gray-500
+                    hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700
                     focus:outline-none focus:ring-2 focus:ring-blue-500
                     transition-colors duration-200
                     ${!title ? 'absolute top-3 right-3' : ''}

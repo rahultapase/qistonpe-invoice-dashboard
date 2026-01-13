@@ -30,7 +30,7 @@ import { Header, Container } from './components/Layout';
 import { SummarySection } from './components/Summary';
 
 // UI Components
-import { ThemeToggle } from './components/UI';
+import { ThemeToggle, Toast } from './components/UI';
 
 // Invoice Components
 import { 
@@ -47,7 +47,8 @@ import {
   useInvoiceFilters, 
   useSummaryStats, 
   useTheme,
-  useBulkSelection 
+  useBulkSelection,
+  useToast
 } from './hooks';
 
 /**
@@ -99,6 +100,12 @@ function Dashboard() {
   const { isDarkMode, toggleTheme } = useTheme();
 
   /**
+   * Toast notifications hook
+   * Provides: toast state and methods
+   */
+  const { toasts, success, error, removeToast } = useToast();
+
+  /**
    * Bulk selection hook
    * Provides: selection state and methods
    */
@@ -143,8 +150,13 @@ function Dashboard() {
    */
   const handleAddInvoice = useCallback((invoiceData) => {
     const result = addInvoice(invoiceData);
+    if (result.success) {
+      success(`Invoice ${result.invoice.id} created successfully`);
+    } else {
+      error('Failed to create invoice. Please try again.');
+    }
     return result;
-  }, [addInvoice]);
+  }, [addInvoice, success, error]);
 
   /**
    * Handle marking an invoice as paid
@@ -152,7 +164,8 @@ function Dashboard() {
    */
   const handleMarkAsPaid = useCallback((invoiceId) => {
     markAsPaid(invoiceId);
-  }, [markAsPaid]);
+    success(`Invoice ${invoiceId} marked as paid`);
+  }, [markAsPaid, success]);
 
   /**
    * Handle bulk mark as paid
@@ -167,8 +180,9 @@ function Dashboard() {
     if (unpaidSelected.length > 0) {
       bulkMarkAsPaid(unpaidSelected);
       deselectAll();
+      success(`${unpaidSelected.length} invoice${unpaidSelected.length > 1 ? 's' : ''} marked as paid`);
     }
-  }, [selectedIds, filteredInvoices, bulkMarkAsPaid, deselectAll]);
+  }, [selectedIds, filteredInvoices, bulkMarkAsPaid, deselectAll, success]);
 
   // ============================================
   // DERIVED STATE
@@ -207,21 +221,8 @@ function Dashboard() {
             />
           </section>
 
-          {/* Bulk Actions Bar */}
-          {filteredInvoices.length > 0 && (
-            <section aria-label="Bulk Actions" className="mt-6">
-              <BulkActions
-                invoices={filteredInvoices}
-                selectedIds={selectedIds}
-                onSelectAll={selectAll}
-                onDeselectAll={deselectAll}
-                onBulkMarkPaid={handleBulkMarkPaid}
-              />
-            </section>
-          )}
-
           {/* Invoice List Section */}
-          <section aria-label="Invoice List" className="mt-4">
+          <section aria-label="Invoice List" className="mt-6">
             <InvoiceList
               invoices={filteredInvoices}
               isLoading={isLoading}
@@ -236,6 +237,9 @@ function Dashboard() {
               selectedIds={selectedIds}
               onToggleSelection={toggleSelection}
               isSelected={isSelected}
+              onSelectAll={selectAll}
+              onDeselectAll={deselectAll}
+              onBulkMarkPaid={handleBulkMarkPaid}
             />
           </section>
         </Container>
@@ -247,6 +251,9 @@ function Dashboard() {
         onClose={handleCloseAddModal}
         onAddInvoice={handleAddInvoice}
       />
+
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

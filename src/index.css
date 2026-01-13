@@ -112,6 +112,28 @@
   .badge-overdue {
     @apply badge bg-red-100 text-red-800 border border-red-200;
   }
+
+  /* Toast notification styles */
+  .toast-container {
+    @apply fixed bottom-4 right-4 z-50 flex flex-col gap-2;
+  }
+
+  .toast {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border
+           animate-slide-in backdrop-blur-sm max-w-sm;
+  }
+
+  .toast-success {
+    @apply bg-green-50 dark:bg-green-900/80 border-green-200 dark:border-green-700 text-green-800 dark:text-green-200;
+  }
+
+  .toast-error {
+    @apply bg-red-50 dark:bg-red-900/80 border-red-200 dark:border-red-700 text-red-800 dark:text-red-200;
+  }
+
+  .toast-info {
+    @apply bg-blue-50 dark:bg-blue-900/80 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-200;
+  }
 }
 
 /* Utilities Layer - Custom Utility Classes */
@@ -148,6 +170,38 @@
   .animate-fade-in {
     animation: fadeIn 0.2s ease-out;
   }
+
+  /* Slide-in animation for toasts */
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  /* Slide-out animation */
+  .animate-slide-out {
+    animation: slideOut 0.2s ease-in forwards;
+  }
+
+  /* Pulse animation for loading states */
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+
+  /* Scale hover effect */
+  .hover-scale {
+    @apply transition-transform duration-200;
+  }
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
+  /* Card lift effect */
+  .hover-lift {
+    @apply transition-all duration-200;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    @apply shadow-md;
+  }
 }
 
 @keyframes fadeIn {
@@ -158,6 +212,37 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
   }
 }
 

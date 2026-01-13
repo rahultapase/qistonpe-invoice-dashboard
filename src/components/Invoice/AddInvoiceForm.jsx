@@ -210,7 +210,7 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
         <div>
           <label 
             htmlFor="customerName" 
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
             Customer Name <span className="text-red-500">*</span>
           </label>
@@ -224,20 +224,22 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
             placeholder="Enter customer name"
             className={`
               w-full px-4 py-2.5 
-              text-gray-900 placeholder:text-gray-400
+              text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500
+              bg-white dark:bg-gray-700
               border rounded-lg
               focus:outline-none focus:ring-2 focus:ring-blue-500
               transition-colors duration-200
               ${touched.customerName && errors.customerName 
                 ? 'border-red-500 focus:ring-red-500' 
-                : 'border-gray-300'
+                : 'border-gray-300 dark:border-gray-600'
               }
             `}
             aria-invalid={touched.customerName && errors.customerName ? 'true' : 'false'}
             aria-describedby={errors.customerName ? 'customerName-error' : undefined}
           />
           {touched.customerName && errors.customerName && (
-            <p id="customerName-error" className="mt-1 text-sm text-red-600">
+            <p id="customerName-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+              <span className="inline-block w-1 h-1 bg-red-500 rounded-full"></span>
               {errors.customerName}
             </p>
           )}
@@ -247,7 +249,7 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
         <div>
           <label 
             htmlFor="amount" 
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
             Invoice Amount <span className="text-red-500">*</span>
           </label>
@@ -267,14 +269,15 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
               max={VALIDATION.AMOUNT.MAX}
               className={`
                 w-full pl-10 pr-4 py-2.5 
-                text-gray-900 placeholder:text-gray-400
+                text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500
+                bg-white dark:bg-gray-700
                 border rounded-lg
                 focus:outline-none focus:ring-2 focus:ring-blue-500
                 transition-colors duration-200
                 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
                 ${touched.amount && errors.amount 
                   ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300'
+                  : 'border-gray-300 dark:border-gray-600'
                 }
               `}
               aria-invalid={touched.amount && errors.amount ? 'true' : 'false'}
@@ -282,7 +285,8 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
             />
           </div>
           {touched.amount && errors.amount && (
-            <p id="amount-error" className="mt-1 text-sm text-red-600">
+            <p id="amount-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+              <span className="inline-block w-1 h-1 bg-red-500 rounded-full"></span>
               {errors.amount}
             </p>
           )}
@@ -294,7 +298,7 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
           <div>
             <label 
               htmlFor="invoiceDate" 
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Invoice Date <span className="text-red-500">*</span>
             </label>
@@ -309,13 +313,14 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
                 max={today}
                 className={`
                   w-full px-4 py-2.5 
-                  text-gray-900
+                  text-gray-900 dark:text-gray-100
+                  bg-white dark:bg-gray-700
                   border rounded-lg
                   focus:outline-none focus:ring-2 focus:ring-blue-500
                   transition-colors duration-200
                   ${touched.invoiceDate && errors.invoiceDate 
                     ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-gray-300'
+                    : 'border-gray-300 dark:border-gray-600'
                   }
                 `}
                 aria-invalid={touched.invoiceDate && errors.invoiceDate ? 'true' : 'false'}
@@ -323,7 +328,8 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
               />
             </div>
             {touched.invoiceDate && errors.invoiceDate && (
-              <p id="invoiceDate-error" className="mt-1 text-sm text-red-600">
+              <p id="invoiceDate-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                <span className="inline-block w-1 h-1 bg-red-500 rounded-full"></span>
                 {errors.invoiceDate}
               </p>
             )}
@@ -333,7 +339,7 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
           <div>
             <label 
               htmlFor="paymentTerms" 
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Payment Terms <span className="text-red-500">*</span>
             </label>
@@ -345,14 +351,14 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
               onBlur={handleBlur}
               className={`
                 w-full px-4 py-2.5 
-                text-gray-900
-                bg-white border rounded-lg
+                text-gray-900 dark:text-gray-100
+                bg-white dark:bg-gray-700 border rounded-lg
                 focus:outline-none focus:ring-2 focus:ring-blue-500
                 transition-colors duration-200
                 cursor-pointer
                 ${touched.paymentTerms && errors.paymentTerms 
                   ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300'
+                  : 'border-gray-300 dark:border-gray-600'
                 }
               `}
               aria-invalid={touched.paymentTerms && errors.paymentTerms ? 'true' : 'false'}
@@ -376,13 +382,13 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
         <div>
           <label 
             htmlFor="dueDate" 
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
-            Due Date <span className="text-gray-400">(auto-calculated)</span>
+            Due Date <span className="text-gray-400 dark:text-gray-500">(auto-calculated)</span>
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Calendar className="h-4 w-4 text-gray-400" />
+              <Calendar className="h-4 w-4 text-gray-400 dark:text-gray-500" />
             </div>
             <input
               type="text"
@@ -390,18 +396,18 @@ function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
               value={calculatedDueDate ? formatDate(calculatedDueDate) : '—'}
               readOnly
               disabled
-              className="w-full pl-10 pr-4 py-2.5 text-gray-600 bg-gray-50 border border-gray-200 rounded-lg cursor-not-allowed"
+              className="w-full pl-10 pr-4 py-2.5 text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed"
               aria-label="Calculated due date"
             />
           </div>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             Due date is calculated as Invoice Date + Payment Terms
           </p>
         </div>
       </div>
 
       {/* Form Actions */}
-      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
         <Button
           type="button"
           variant="secondary"

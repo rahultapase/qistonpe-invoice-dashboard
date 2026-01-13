@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
  * Some columns are hidden on mobile for better responsiveness.
  * 
  * Columns:
+ * - Checkbox (if selection enabled)
  * - Invoice # (always visible)
  * - Customer (always visible)
  * - Invoice Date (hidden on mobile)
@@ -16,11 +17,25 @@ import PropTypes from 'prop-types';
  * - Status (always visible)
  * - Days (hidden on mobile)
  * - Action (always visible)
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.hasSelection - Whether selection column should be shown
  */
-function InvoiceTableHeader() {
+function InvoiceTableHeader({ hasSelection = false }) {
   return (
-    <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+    <thead className="bg-gray-50 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
       <tr>
+        {/* Checkbox Column */}
+        {hasSelection && (
+          <th 
+            scope="col" 
+            className="w-10 px-2 sm:px-3 py-3"
+            aria-label="Selection"
+          >
+            <span className="sr-only">Select</span>
+          </th>
+        )}
+        
         {/* Invoice Number */}
         <th 
           scope="col" 
@@ -80,7 +95,7 @@ function InvoiceTableHeader() {
         {/* Action */}
         <th 
           scope="col" 
-          className="px-3 sm:px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          className="px-3 sm:px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
         >
           Action
         </th>
@@ -89,6 +104,13 @@ function InvoiceTableHeader() {
   );
 }
 
-InvoiceTableHeader.propTypes = {};
+InvoiceTableHeader.propTypes = {
+  /** Whether selection column should be shown */
+  hasSelection: PropTypes.bool
+};
+
+InvoiceTableHeader.defaultProps = {
+  hasSelection: false
+};
 
 export default memo(InvoiceTableHeader);

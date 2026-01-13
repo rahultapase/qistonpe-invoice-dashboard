@@ -167,7 +167,7 @@ SearchBar.propTypes = {
 };
 
 SearchBar.defaultProps = {
-  placeholder: 'Search by invoice number or customer name',
+  placeholder: 'Search invoices...',
   debounceMs: 300
 };
 

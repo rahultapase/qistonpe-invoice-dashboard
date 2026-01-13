@@ -7,15 +7,15 @@ import { INVOICE_STATUS } from '../../constants/invoiceConstants';
  */
 const badgeStyles = {
   [INVOICE_STATUS.PAID]: {
-    className: 'bg-green-100 text-green-800 border-green-200',
+    className: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-700',
     label: 'Paid'
   },
   [INVOICE_STATUS.PENDING]: {
-    className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    className: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-700',
     label: 'Pending'
   },
   [INVOICE_STATUS.OVERDUE]: {
-    className: 'bg-red-100 text-red-800 border-red-200',
+    className: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-700',
     label: 'Overdue'
   }
 };

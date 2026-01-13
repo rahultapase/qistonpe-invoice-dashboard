@@ -29,11 +29,7 @@ function useTheme() {
       return stored === 'dark';
     }
     
-    // Fall back to system preference
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    
+    // Default to light mode for better first impression
     return false;
   });
 

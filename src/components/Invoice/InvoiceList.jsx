@@ -1,13 +1,14 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FilterBar } from '../Filters';
 import InvoiceTable from './InvoiceTable';
+import BulkActions from './BulkActions';
 
 /**
  * InvoiceList Component
  * 
- * Main component that combines FilterBar and InvoiceTable.
- * Handles the complete invoice list view with filtering and pagination.
+ * Main component that combines FilterBar, BulkActions, and InvoiceTable.
+ * Handles the complete invoice list view with filtering, selection, and pagination.
  * 
  * @param {Object} props - Component props
  * @param {Array} props.invoices - Filtered and sorted invoices to display
@@ -23,6 +24,9 @@ import InvoiceTable from './InvoiceTable';
  * @param {Set} props.selectedIds - Set of selected invoice IDs (optional)
  * @param {Function} props.onToggleSelection - Callback to toggle selection (optional)
  * @param {Function} props.isSelected - Function to check if an invoice is selected (optional)
+ * @param {Function} props.onSelectAll - Callback to select all invoices
+ * @param {Function} props.onDeselectAll - Callback to deselect all invoices
+ * @param {Function} props.onBulkMarkPaid - Callback for bulk mark as paid action
  */
 function InvoiceList({
   invoices,
@@ -37,7 +41,10 @@ function InvoiceList({
   onMarkAsPaid,
   selectedIds,
   onToggleSelection,
-  isSelected
+  isSelected,
+  onSelectAll,
+  onDeselectAll,
+  onBulkMarkPaid
 }) {
   // Determine if filters are active
   const hasActiveFilters = statusFilter !== 'all' || searchQuery.trim() !== '';
@@ -48,9 +55,15 @@ function InvoiceList({
     onSearchChange('');
   };
 
+  // Calculate if there are unpaid selected invoices
+  const hasUnpaidSelected = useMemo(() => {
+    if (!selectedIds || selectedIds.size === 0) return false;
+    return invoices.some(inv => selectedIds.has(inv.id) && !inv.isPaid);
+  }, [invoices, selectedIds]);
+
   return (
     <section aria-label="Invoice List">
-      {/* Filter Bar */}
+      {/* Filter Bar with integrated Select All */}
       <FilterBar
         statusFilter={statusFilter}
         onStatusChange={onStatusFilterChange}
@@ -61,7 +74,23 @@ function InvoiceList({
         onClearFilters={handleClearFilters}
         hasActiveFilters={hasActiveFilters}
         statusCounts={statusCounts}
+        selectedCount={selectedIds?.size || 0}
+        totalCount={invoices.length}
+        onSelectAll={onSelectAll}
+        onDeselectAll={onDeselectAll}
       />
+      
+      {/* Bulk Actions Bar - shows when items selected */}
+      {selectedIds && selectedIds.size > 0 && (
+        <BulkActions
+          invoices={invoices}
+          selectedIds={selectedIds}
+          onSelectAll={onSelectAll}
+          onDeselectAll={onDeselectAll}
+          onBulkMarkPaid={onBulkMarkPaid}
+          showSelectAll={false}
+        />
+      )}
       
       {/* Invoice Table */}
       <InvoiceTable
@@ -104,7 +133,13 @@ InvoiceList.propTypes = {
   /** Callback to toggle selection */
   onToggleSelection: PropTypes.func,
   /** Function to check if invoice is selected */
-  isSelected: PropTypes.func
+  isSelected: PropTypes.func,
+  /** Callback to select all invoices */
+  onSelectAll: PropTypes.func,
+  /** Callback to deselect all invoices */
+  onDeselectAll: PropTypes.func,
+  /** Callback for bulk mark as paid */
+  onBulkMarkPaid: PropTypes.func
 };
 
 InvoiceList.defaultProps = {
@@ -112,7 +147,10 @@ InvoiceList.defaultProps = {
   statusCounts: null,
   selectedIds: new Set(),
   onToggleSelection: null,
-  isSelected: null
+  isSelected: null,
+  onSelectAll: null,
+  onDeselectAll: null,
+  onBulkMarkPaid: null
 };
 
 export default memo(InvoiceList);

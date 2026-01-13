@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 /**
  * Button variant styles
+ * Includes dark mode support for all variants
  */
 const variantStyles = {
   primary: `
@@ -10,6 +11,7 @@ const variantStyles = {
     hover:bg-blue-700 
     focus:ring-blue-500
     disabled:bg-blue-400
+    dark:bg-blue-600 dark:hover:bg-blue-500
   `,
   secondary: `
     bg-gray-100 text-gray-700 
@@ -17,17 +19,21 @@ const variantStyles = {
     focus:ring-gray-500
     border border-gray-300
     disabled:bg-gray-100 disabled:text-gray-400
+    dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600
+    dark:hover:bg-gray-600 dark:disabled:bg-gray-800
   `,
   danger: `
     bg-red-600 text-white 
     hover:bg-red-700 
     focus:ring-red-500
     disabled:bg-red-400
+    dark:bg-red-600 dark:hover:bg-red-500
   `,
   ghost: `
     bg-transparent text-gray-600 
     hover:bg-gray-100 hover:text-gray-900
     focus:ring-gray-500
+    dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100
   `,
   outline: `
     bg-transparent text-blue-600 
@@ -35,16 +41,20 @@ const variantStyles = {
     hover:bg-blue-50
     focus:ring-blue-500
     disabled:text-blue-300 disabled:border-blue-300
+    dark:text-blue-400 dark:border-blue-400
+    dark:hover:bg-blue-900/30
+    dark:disabled:text-blue-600 dark:disabled:border-blue-800
   `
 };
 
 /**
  * Button size styles
+ * Using min-height for better touch targets on mobile (44px minimum recommended)
  */
 const sizeStyles = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
-  md: 'px-4 py-2 text-sm gap-2',
-  lg: 'px-6 py-3 text-base gap-2'
+  sm: 'px-3 py-1.5 text-sm gap-1.5 min-h-[36px]',
+  md: 'px-4 py-2 text-sm gap-2 min-h-[40px]',
+  lg: 'px-6 py-3 text-base gap-2 min-h-[48px]'
 };
 
 /**
