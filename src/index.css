@@ -1,0 +1,231 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Layer - Global Styles */
+@layer base {
+  /* Set Inter as the default font */
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Remove default margin */
+  body {
+    @apply m-0 p-0;
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+  }
+
+  /* Remove default button styles */
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Default input styles */
+  input,
+  select,
+  textarea {
+    @apply border-gray-300 focus:border-blue-500 focus:ring-blue-500;
+  }
+}
+
+/* Components Layer - Reusable Component Styles */
+@layer components {
+  /* Custom scrollbar for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400;
+  }
+
+  /* Card component base styles */
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4;
+  }
+
+  .card-hover {
+    @apply card transition-shadow duration-200 hover:shadow-md;
+  }
+
+  /* Input field base styles */
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+           disabled:bg-gray-100 disabled:cursor-not-allowed;
+  }
+
+  /* Select dropdown base styles */
+  .select-field {
+    @apply input-field appearance-none bg-white cursor-pointer;
+  }
+
+  /* Button base styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 
+           font-medium rounded-lg transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+
+  /* Status badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-paid {
+    @apply badge bg-green-100 text-green-800 border border-green-200;
+  }
+
+  .badge-pending {
+    @apply badge bg-yellow-100 text-yellow-800 border border-yellow-200;
+  }
+
+  .badge-overdue {
+    @apply badge bg-red-100 text-red-800 border border-red-200;
+  }
+}
+
+/* Utilities Layer - Custom Utility Classes */
+@layer utilities {
+  /* Text truncation with ellipsis */
+  .truncate-text {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animation utilities */
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  /* Modal fade-in animation */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Dark mode support */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* Dark mode component overrides */
+.dark .card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .input-field,
+.dark .select-field {
+  @apply bg-gray-800 border-gray-600 text-gray-100 placeholder:text-gray-400;
+}
+
+.dark .input-field:focus,
+.dark .select-field:focus {
+  @apply border-blue-500 ring-blue-500;
+}
+
+.dark .btn-secondary {
+  @apply bg-gray-700 text-gray-200 hover:bg-gray-600;
+}
+
+/* Dark mode badges */
+.dark .badge-paid {
+  @apply bg-green-900/50 text-green-300 border-green-700;
+}
+
+.dark .badge-pending {
+  @apply bg-yellow-900/50 text-yellow-300 border-yellow-700;
+}
+
+.dark .badge-overdue {
+  @apply bg-red-900/50 text-red-300 border-red-700;
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 hover:bg-gray-500;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    @apply bg-white text-black;
+  }
+
+  .card {
+    @apply shadow-none border;
+  }
+}
