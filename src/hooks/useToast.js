@@ -17,9 +17,9 @@ function useToast() {
    * @param {string} type - Toast type: 'success', 'error', 'info'
    * @param {number} duration - Auto-dismiss duration in ms (default: 4000)
    */
-  const addToast = useCallback((message, type = 'info', duration = 4000) => {
+  const addToast = useCallback((message, type = 'info', duration = 2500) => {
     const id = Date.now() + Math.random();
-    
+
     setToasts(prev => [...prev, {
       id,
       message,

@@ -174,7 +174,7 @@ InvoiceRow.propTypes = {
     invoiceDate: PropTypes.string.isRequired,
     dueDate: PropTypes.string.isRequired,
     paymentDate: PropTypes.string,
-    status: PropTypes.oneOf(['paid', 'pending', 'overdue']).isRequired
+    status: PropTypes.oneOf(['paid', 'pending', 'overdue'])
   }).isRequired,
   /** Callback when "Mark as Paid" button is clicked */
   onMarkAsPaid: PropTypes.func.isRequired,

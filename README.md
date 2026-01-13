@@ -2,7 +2,6 @@
 
 A responsive MSME Invoice Management Dashboard built with React, Vite, and Tailwind CSS. Helps business owners track invoices, payments, and credit utilization at a glance.
 
-
 ## 🚀 Live Demo
 
 **[View Live Demo](https://qistonpe-invoice-dashboard.vercel.app/)**
@@ -38,7 +37,6 @@ npm run preview
 ```
 
 ---
-
 ## Approach
 
 ### Component Structure
@@ -69,8 +67,8 @@ I used custom React hooks instead of Redux to keep things simple:
 **1. Date Calculations Were Off**  
 Initially, the "Days until due" calculation was wrong because of timezone issues. Fixed by using `startOfDay()` from date-fns for all comparisons.
 
-**2. Performance During Filtering & Sorting**  
-Filtering and sorting caused unnecessary recalculations and re-renders in the table. This was improved by memoizing derived lists using `useMemo` and limiting renders through pagination.
+**2. Performance with 500+ Invoices**  
+The table was noticeably slow when filtering/sorting with large datasets. Added `useMemo` for filtered lists and pagination which made it instant.
 
 **3. Status Calculations**  
 Had to carefully think through the logic for auto-calculating invoice status (Paid/Pending/Overdue) based on payment date and due date. Created a dedicated utility function with clear conditionals.
@@ -101,12 +99,17 @@ Had to carefully think through the logic for auto-calculating invoice status (Pa
 
 ### Why These Work
 
-The main goal was to prevent unnecessary re-renders as filters, sorting, and pagination change. By memoizing derived data and wrapping row components with React.memo, the UI remains smooth and predictable even as the number of invoices grows.
+While testing with 500+ mock invoices, I noticed that simple actions like changing filters, sorting, or switching pages were triggering repeated recalculations of the invoice list. By memoizing the derived data and wrapping each row with `React.memo`, only the parts that actually changed were re-rendered. This helped keep the interface smooth and responsive.
 
 ### Trade-offs
 
 - **No virtualization** - Pagination was simpler to implement and sufficient for the dataset size
 - **No charts** - Focused on getting the core features right instead of adding optional chart library
+
+### Testing Notes
+
+To validate performance and UI behavior, I generated 500+ mock invoices using a small local script and tested filtering, sorting, pagination, and bulk actions under this dataset.
+
 
 ---
 

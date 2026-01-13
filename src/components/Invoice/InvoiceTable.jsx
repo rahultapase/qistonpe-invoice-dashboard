@@ -120,8 +120,8 @@ function InvoiceTable({
   onMarkAsPaid,
   isLoading = false,
   isEmptyDueToFilters = false,
-  onClearFilters = () => {},
-  onAddInvoice = () => {},
+  onClearFilters = () => { },
+  onAddInvoice = () => { },
   selectedIds = new Set(),
   onToggleSelection = null,
   isSelected = null,
@@ -193,11 +193,6 @@ function InvoiceTable({
   const handlePageChange = useCallback((newPage) => {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setCurrentPage(newPage);
-      // Scroll to top of table
-      document.querySelector('[data-invoice-table]')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
     }
   }, [pagination.totalPages]);
 
@@ -397,7 +392,7 @@ InvoiceTable.propTypes = {
       invoiceDate: PropTypes.string.isRequired,
       dueDate: PropTypes.string.isRequired,
       paymentDate: PropTypes.string,
-      status: PropTypes.oneOf(['paid', 'pending', 'overdue']).isRequired
+      status: PropTypes.oneOf(['paid', 'pending', 'overdue'])
     })
   ).isRequired,
   /** Callback when an invoice is marked as paid */
