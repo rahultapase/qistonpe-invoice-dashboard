@@ -27,10 +27,10 @@ const iconMap = {
  */
 function EmptyState({ 
   type = 'no-data',
-  title,
-  message,
-  onAction,
-  actionLabel
+  title = '',
+  message = '',
+  onAction = null,
+  actionLabel = ''
 }) {
   const IconComponent = iconMap[type] || FileX;
 
@@ -120,14 +120,6 @@ EmptyState.propTypes = {
   onAction: PropTypes.func,
   /** Label for the action button (overrides default) */
   actionLabel: PropTypes.string
-};
-
-EmptyState.defaultProps = {
-  type: 'no-data',
-  title: '',
-  message: '',
-  onAction: null,
-  actionLabel: ''
 };
 
 export default memo(EmptyState);

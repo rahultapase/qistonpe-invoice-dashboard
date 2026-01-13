@@ -19,7 +19,7 @@ function SummarySection({ summaryCards, isLoading = false }) {
   // Loading skeleton
   if (isLoading) {
     return (
-      <section 
+      <section
         className="mb-6 sm:mb-8"
         aria-label="Dashboard Summary"
         aria-busy="true"
@@ -27,7 +27,7 @@ function SummarySection({ summaryCards, isLoading = false }) {
         <h2 className="sr-only">Dashboard Summary</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div 
+            <div
               key={i}
               className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 animate-pulse"
             >
@@ -47,13 +47,13 @@ function SummarySection({ summaryCards, isLoading = false }) {
   }
 
   return (
-    <section 
+    <section
       className="mb-6 sm:mb-8"
       aria-label="Dashboard Summary"
     >
       {/* Screen reader heading */}
       <h2 className="sr-only">Dashboard Summary</h2>
-      
+
       {/* Summary Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {summaryCards.map((card) => (

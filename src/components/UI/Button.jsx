@@ -188,15 +188,5 @@ Button.propTypes = {
   'aria-label': PropTypes.string
 };
 
-Button.defaultProps = {
-  variant: 'primary',
-  size: 'md',
-  isLoading: false,
-  fullWidth: false,
-  disabled: false,
-  type: 'button',
-  className: ''
-};
-
 // Memoize to prevent re-renders when parent state changes
 export default memo(Button);

@@ -40,6 +40,7 @@ function ExportButton({ invoices = [], filename = null, disabled = false }) {
       leftIcon={<Download className="h-4 w-4" />}
       aria-label={`Export ${invoices?.length || 0} invoices to CSV`}
       title={isDisabled ? 'No invoices to export' : `Export ${invoices.length} invoices to CSV`}
+      className="!px-2.5 sm:!px-4 !gap-0 sm:!gap-2"
     >
       <span className="hidden sm:inline">Export CSV</span>
     </Button>

@@ -35,7 +35,7 @@ function FilterBar({
   onSearchChange,
   sortOption,
   onSortChange,
-  onClearFilters = () => {},
+  onClearFilters = () => { },
   hasActiveFilters = false,
   statusCounts = null,
   selectedCount = 0,
@@ -78,7 +78,7 @@ function FilterBar({
           />
         </div>
 
-        {/* Clear Filters Button (only show when filters active) */}
+        {/* Clear Filters Button (only show when filters active, hidden on mobile) */}
         {
           hasActiveFilters && (
             <Button
@@ -87,9 +87,9 @@ function FilterBar({
               onClick={onClearFilters}
               leftIcon={<RotateCcw className="h-4 w-4" />}
               aria-label="Clear all filters"
+              className="hidden sm:inline-flex"
             >
-              <span className="hidden sm:inline">Clear Filters</span>
-              <span className="sm:hidden">Clear</span>
+              Clear Filters
             </Button>
           )
         }

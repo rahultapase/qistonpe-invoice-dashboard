@@ -126,7 +126,7 @@ function CustomDropdown({
  * @param {Function} props.onCancel - Callback when form is cancelled
  * @param {boolean} props.isSubmitting - Whether form is being submitted
  */
-function AddInvoiceForm({ onSubmit, onCancel, isSubmitting }) {
+function AddInvoiceForm({ onSubmit, onCancel, isSubmitting = false }) {
   // Get today's date for max date validation
   const today = toISODateString(new Date());
 
@@ -538,10 +538,6 @@ AddInvoiceForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
   /** Whether the form is currently being submitted */
   isSubmitting: PropTypes.bool
-};
-
-AddInvoiceForm.defaultProps = {
-  isSubmitting: false
 };
 
 export default memo(AddInvoiceForm);

@@ -15,7 +15,7 @@ import { STATUS_FILTER_OPTIONS } from '../../constants/invoiceConstants';
  */
 function StatusFilter({ activeStatus, onStatusChange, counts = null }) {
   return (
-    <div 
+    <div
       className="flex flex-wrap gap-2"
       role="group"
       aria-label="Filter invoices by status"
@@ -23,7 +23,7 @@ function StatusFilter({ activeStatus, onStatusChange, counts = null }) {
       {STATUS_FILTER_OPTIONS.map((option) => {
         const isActive = activeStatus === option.value;
         const count = counts?.[option.value];
-        
+
         return (
           <button
             key={option.value}
@@ -34,8 +34,8 @@ function StatusFilter({ activeStatus, onStatusChange, counts = null }) {
               text-sm font-medium rounded-lg
               transition-colors duration-200
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800
-              ${isActive 
-                ? 'bg-blue-600 text-white shadow-sm' 
+              ${isActive
+                ? 'bg-blue-600 text-white shadow-sm'
                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
               }
             `}
@@ -43,16 +43,16 @@ function StatusFilter({ activeStatus, onStatusChange, counts = null }) {
             aria-label={`Filter by ${option.label}${count !== undefined ? `, ${count} invoices` : ''}`}
           >
             {option.label}
-            
+
             {/* Count badge */}
             {count !== undefined && (
-              <span 
+              <span
                 className={`
                   inline-flex items-center justify-center
                   min-w-[1.25rem] h-5 px-1.5
                   text-xs font-medium rounded-full
-                  ${isActive 
-                    ? 'bg-blue-500 text-white' 
+                  ${isActive
+                    ? 'bg-blue-500 text-white'
                     : 'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
                   }
                 `}

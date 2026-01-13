@@ -156,8 +156,4 @@ BulkActions.propTypes = {
   showSelectAll: PropTypes.bool
 };
 
-BulkActions.defaultProps = {
-  showSelectAll: true
-};
-
 export default memo(BulkActions);
