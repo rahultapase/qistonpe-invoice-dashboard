@@ -18,12 +18,12 @@ function InvoiceTableHeader({
   hasSelection = false,
   isAllSelected = false,
   isIndeterminate = false,
-  onToggleAll = () => {}
+  onToggleAll = () => { }
 }) {
   // Common header style
-  const thClass = "px-3 sm:px-4 py-3 text-left text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest";
-  const thCenterClass = "px-3 sm:px-4 py-3 text-center text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest";
-  const thRightClass = "px-3 sm:px-4 py-3 text-right text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest";
+  const thClass = "px-3 sm:px-4 py-3 text-left text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest whitespace-nowrap";
+  const thCenterClass = "px-3 sm:px-4 py-3 text-center text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest whitespace-nowrap";
+  const thRightClass = "px-3 sm:px-4 py-3 text-right text-[13px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest whitespace-nowrap";
 
   return (
     <thead className="bg-gray-50 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
