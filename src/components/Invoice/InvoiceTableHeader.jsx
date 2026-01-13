@@ -63,7 +63,7 @@ function InvoiceTableHeader({
 
         {/* Customer Name */}
         <th scope="col" className={thClass}>
-          Customer
+          Customer Name
         </th>
 
         {/* Invoice Date - Hidden on mobile */}
