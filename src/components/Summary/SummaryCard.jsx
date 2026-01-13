@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
-import { 
-  Clock, 
-  AlertTriangle, 
-  CheckCircle, 
-  TrendingUp, 
+import {
+  Clock,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
   TrendingDown,
-  Minus 
+  Minus
 } from 'lucide-react';
 
 /**
@@ -36,9 +36,9 @@ const iconMap = {
  * @param {string} props.bgClass - Background color class for the icon
  * @param {string} props.borderClass - Border color class
  */
-function SummaryCard({ 
-  title, 
-  value, 
+function SummaryCard({
+  title,
+  value,
   description,
   icon = 'clock',
   colorClass = 'text-gray-900',
@@ -49,7 +49,7 @@ function SummaryCard({
   const IconComponent = iconMap[icon] || Clock;
 
   return (
-    <div 
+    <div
       className={`
         bg-white dark:bg-gray-800 rounded-xl border ${borderClass} dark:border-opacity-50
         p-4 sm:p-5 
@@ -68,12 +68,12 @@ function SummaryCard({
           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
             {title}
           </h3>
-          
+
           {/* Value - allow wrapping on small screens */}
           <p className={`mt-2 text-xl sm:text-2xl lg:text-3xl font-bold ${colorClass} break-words leading-tight`}>
             {value}
           </p>
-          
+
           {/* Description */}
           {description && (
             <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 line-clamp-2" title={description}>
@@ -81,9 +81,9 @@ function SummaryCard({
             </p>
           )}
         </div>
-        
+
         {/* Icon - with subtle animation */}
-        <div 
+        <div
           className={`
             flex-shrink-0
             flex items-center justify-center 
@@ -115,14 +115,6 @@ SummaryCard.propTypes = {
   bgClass: PropTypes.string,
   /** Tailwind border color class for the card */
   borderClass: PropTypes.string
-};
-
-SummaryCard.defaultProps = {
-  description: '',
-  icon: 'clock',
-  colorClass: 'text-gray-900',
-  bgClass: 'bg-gray-50',
-  borderClass: 'border-gray-200'
 };
 
 // Memoize to prevent re-renders when parent state changes

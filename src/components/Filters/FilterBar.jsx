@@ -35,13 +35,13 @@ function FilterBar({
   onSearchChange,
   sortOption,
   onSortChange,
-  onClearFilters,
-  hasActiveFilters,
-  statusCounts,
+  onClearFilters = () => {},
+  hasActiveFilters = false,
+  statusCounts = null,
   selectedCount = 0,
   totalCount = 0,
-  onSelectAll,
-  onDeselectAll
+  onSelectAll = null,
+  onDeselectAll = null
 }) {
   // Calculate counts including 'all'
   const counts = statusCounts ? {
@@ -63,7 +63,7 @@ function FilterBar({
   };
 
   return (
-    <div 
+    <div
       className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4 sm:mb-6 transition-colors duration-200 shadow-sm"
       role="search"
       aria-label="Invoice filters"
@@ -71,86 +71,49 @@ function FilterBar({
       {/* Top Row: Status Filters + Select All */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          {/* Select All Button - Moved here */}
-          {totalCount > 0 && onSelectAll && (
-            <button
-              type="button"
-              onClick={handleToggleAll}
-              className={`
-                flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
-                transition-all duration-200 active:scale-95
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-                ${allSelected 
-                  ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70' 
-                  : someSelected
-                    ? 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                }
-              `}
-              aria-label={allSelected ? 'Deselect all invoices' : 'Select all invoices'}
-            >
-              {allSelected ? (
-                <XSquare className="h-4 w-4" aria-hidden="true" />
-              ) : someSelected ? (
-                <CheckSquare className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Square className="h-4 w-4" aria-hidden="true" />
-              )}
-              <span className="hidden sm:inline">
-                {allSelected ? 'Deselect' : someSelected ? `${selectedCount} selected` : 'Select All'}
-              </span>
-              {selectedCount > 0 && !allSelected && (
-                <span className="sm:hidden">{selectedCount}</span>
-              )}
-            </button>
-          )}
-          
-          {/* Divider */}
-          {totalCount > 0 && onSelectAll && (
-            <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-gray-700" />
-          )}
-          
           <StatusFilter
             activeStatus={statusFilter}
             onStatusChange={onStatusChange}
             counts={counts}
           />
         </div>
-        
+
         {/* Clear Filters Button (only show when filters active) */}
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClearFilters}
-            leftIcon={<RotateCcw className="h-4 w-4" />}
-            aria-label="Clear all filters"
-          >
-            <span className="hidden sm:inline">Clear Filters</span>
-            <span className="sm:hidden">Clear</span>
-          </Button>
-        )}
-      </div>
-      
+        {
+          hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearFilters}
+              leftIcon={<RotateCcw className="h-4 w-4" />}
+              aria-label="Clear all filters"
+            >
+              <span className="hidden sm:inline">Clear Filters</span>
+              <span className="sm:hidden">Clear</span>
+            </Button>
+          )
+        }
+      </div >
+
       {/* Bottom Row: Search and Sort */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      < div className="flex flex-col sm:flex-row gap-3" >
         {/* Search Bar */}
-        <div className="flex-1">
+        < div className="flex-1" >
           <SearchBar
             value={searchQuery}
             onChange={onSearchChange}
           />
-        </div>
-        
+        </div >
+
         {/* Sort Dropdown */}
-        <div className="flex-shrink-0">
+        < div className="flex-shrink-0" >
           <SortDropdown
             value={sortOption}
             onChange={onSortChange}
           />
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   );
 }
 
@@ -186,16 +149,6 @@ FilterBar.propTypes = {
   onSelectAll: PropTypes.func,
   /** Callback to deselect all invoices */
   onDeselectAll: PropTypes.func
-};
-
-FilterBar.defaultProps = {
-  onClearFilters: () => {},
-  hasActiveFilters: false,
-  statusCounts: null,
-  selectedCount: 0,
-  totalCount: 0,
-  onSelectAll: null,
-  onDeselectAll: null
 };
 
 export default memo(FilterBar);

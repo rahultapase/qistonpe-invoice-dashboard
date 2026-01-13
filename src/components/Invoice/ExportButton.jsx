@@ -15,7 +15,7 @@ import { exportInvoicesToCSV } from '../../utils/exportUtils';
  * @param {string} props.filename - Optional custom filename
  * @param {boolean} props.disabled - Whether button is disabled
  */
-function ExportButton({ invoices, filename, disabled }) {
+function ExportButton({ invoices = [], filename = null, disabled = false }) {
   /**
    * Handle export click
    */
@@ -54,12 +54,6 @@ ExportButton.propTypes = {
   filename: PropTypes.string,
   /** Whether the button is disabled */
   disabled: PropTypes.bool
-};
-
-ExportButton.defaultProps = {
-  invoices: [],
-  filename: null,
-  disabled: false
 };
 
 export default memo(ExportButton);

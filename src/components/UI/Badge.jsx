@@ -68,10 +68,5 @@ Badge.propTypes = {
   className: PropTypes.string
 };
 
-Badge.defaultProps = {
-  size: 'md',
-  className: ''
-};
-
 // Memoize to prevent re-renders when parent state changes
 export default memo(Badge);

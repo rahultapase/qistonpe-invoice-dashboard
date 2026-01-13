@@ -85,76 +85,57 @@ function BulkActions({
 
   return (
     <div 
-      className="flex flex-wrap items-center gap-2 sm:gap-4 p-3 mb-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 animate-in slide-in-from-top-2 duration-200"
+      className="flex flex-wrap items-center justify-between gap-3 p-4 mb-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm animate-in slide-in-from-top-2 duration-200"
       role="toolbar"
       aria-label="Bulk actions"
     >
-      {/* Select All / Deselect All Button - Only show if showSelectAll is true */}
-      {showSelectAll && (
-        <button
-          type="button"
-          onClick={handleToggleAll}
-          className={`
-            flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
-            transition-all duration-200 active:scale-95
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-            ${allSelected 
-              ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-800 dark:text-blue-300' 
-              : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-            }
-            border border-blue-200 dark:border-blue-700
-          `}
-          aria-label={allSelected ? 'Deselect all invoices' : 'Select all invoices'}
-        >
-          {allSelected ? (
-            <XSquare className="h-4 w-4" aria-hidden="true" />
-          ) : someSelected ? (
-            <CheckSquare className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Square className="h-4 w-4" aria-hidden="true" />
-          )}
-          <span className="hidden sm:inline">
-            {allSelected ? 'Deselect All' : 'Select All'}
+      {/* Left side: Selection Count */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/40 px-3 py-2 rounded-lg">
+          <CheckCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+            {selectedCount} invoice{selectedCount !== 1 ? 's' : ''} selected
           </span>
-        </button>
-      )}
+        </div>
+      </div>
 
-      {/* Selection Count */}
-      <span className="text-sm text-blue-700 dark:text-blue-300">
-        <CheckCircle className="inline-block h-4 w-4 mr-1" />
-        <span className="font-semibold">{selectedCount}</span>
-        {' '}invoice{selectedCount !== 1 ? 's' : ''} selected
-      </span>
-
-      {/* Bulk Actions */}
-      <div className="flex items-center gap-2 ml-auto">
+      {/* Right side: Action Buttons */}
+      <div className="flex items-center gap-2">
         {/* Mark as Paid Button */}
         {unpaidSelectedCount > 0 && (
-          <Button
-            variant="primary"
-            size="sm"
+          <button
             onClick={handleBulkMarkPaid}
-            isLoading={isProcessing}
             disabled={isProcessing}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
             aria-label={`Mark ${unpaidSelectedCount} invoices as paid`}
-            className="active:scale-95"
           >
-            <CheckCircle className="h-4 w-4 mr-1" />
-            Mark {unpaidSelectedCount} as Paid
-          </Button>
+            {isProcessing ? (
+              <>
+                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4" aria-hidden="true" />
+                <span>Mark {unpaidSelectedCount} as Paid</span>
+              </>
+            )}
+          </button>
         )}
 
-        {/* Clear Selection */}
-        <Button
-          variant="ghost"
-          size="sm"
+        {/* Clear Selection Button */}
+        <button
           onClick={onDeselectAll}
           disabled={isProcessing}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium text-sm rounded-lg border border-gray-300 dark:border-gray-600 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
           aria-label="Clear selection"
-          className="active:scale-95"
         >
-          Clear
-        </Button>
+          <XSquare className="h-4 w-4" aria-hidden="true" />
+          <span>Clear</span>
+        </button>
       </div>
     </div>
   );

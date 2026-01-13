@@ -166,9 +166,4 @@ SearchBar.propTypes = {
   debounceMs: PropTypes.number
 };
 
-SearchBar.defaultProps = {
-  placeholder: 'Search invoices...',
-  debounceMs: 300
-};
-
 export default memo(SearchBar);

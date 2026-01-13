@@ -19,15 +19,15 @@ import { INVOICE_STATUS } from '../../constants/invoiceConstants';
  * @param {boolean} props.isSelected - Whether the row is selected
  * @param {Function} props.onToggleSelection - Callback to toggle selection
  */
-function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelection }) {
+function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelection = null }) {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Get display info for the Days column
   const daysDisplay = getDaysDisplay(invoice);
-  
+
   // Check if invoice can be marked as paid
   const canMarkAsPaid = invoice.status !== INVOICE_STATUS.PAID;
-  
+
   /**
    * Handle mark as paid click
    * Uses useCallback for stable reference
@@ -48,15 +48,15 @@ function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelecti
   }, [invoice.id, onToggleSelection]);
 
   return (
-    <tr 
+    <tr
       className={`
         border-b border-gray-100 dark:border-gray-700 
-        transition-all duration-200 ease-out
-        ${isSelected 
-          ? 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30' 
+        transition-all duration-200 ease-out relative
+        hover:shadow-md hover:scale-[1.002] hover:z-10
+        ${isSelected
+          ? 'bg-blue-50/60 dark:bg-blue-900/20 hover:bg-blue-100/60 dark:hover:bg-blue-900/30'
           : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50'
         }
-        ${isHovered ? 'shadow-sm' : ''}
       `}
       data-invoice-id={invoice.id}
       onMouseEnter={() => setIsHovered(true)}
@@ -72,8 +72,8 @@ function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelecti
               flex items-center justify-center w-5 h-5 rounded
               transition-all duration-200 active:scale-90
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-              ${isSelected 
-                ? 'bg-blue-600 text-white' 
+              ${isSelected
+                ? 'bg-blue-600 text-white'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-blue-400 dark:hover:border-blue-500'
               }
             `}
@@ -83,18 +83,18 @@ function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelecti
           </button>
         </td>
       )}
-      
+
       {/* Invoice Number */}
       <td className="px-3 sm:px-4 py-3 sm:py-4">
         <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? 'text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-gray-100'}`}>
           {invoice.id}
         </span>
       </td>
-      
+
       {/* Customer Name */}
       <td className="px-3 sm:px-4 py-3 sm:py-4">
         <div className="flex flex-col">
-          <span 
+          <span
             className="text-sm text-gray-900 dark:text-gray-100 truncate max-w-[150px] sm:max-w-[200px]"
             title={invoice.customerName}
           >
@@ -106,40 +106,40 @@ function InvoiceRow({ invoice, onMarkAsPaid, isSelected = false, onToggleSelecti
           </span>
         </div>
       </td>
-      
+
       {/* Invoice Date - Hidden on mobile */}
       <td className="hidden md:table-cell px-4 py-4">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           {formatDate(invoice.invoiceDate)}
         </span>
       </td>
-      
+
       {/* Due Date - Hidden on mobile */}
       <td className="hidden md:table-cell px-4 py-4">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           {formatDate(invoice.dueDate)}
         </span>
       </td>
-      
+
       {/* Amount */}
       <td className="px-3 sm:px-4 py-3 sm:py-4 text-right">
         <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
           {formatCurrencyINR(invoice.amount)}
         </span>
       </td>
-      
+
       {/* Status Badge */}
       <td className="px-3 sm:px-4 py-3 sm:py-4 text-center">
         <Badge status={invoice.status} />
       </td>
-      
+
       {/* Days Display - Hidden on mobile */}
       <td className="hidden lg:table-cell px-4 py-4">
         <span className={`text-sm font-medium ${daysDisplay.colorClass}`}>
           {daysDisplay.text}
         </span>
       </td>
-      
+
       {/* Action Button */}
       <td className="px-3 sm:px-4 py-3 sm:py-4 text-center">
         {canMarkAsPaid ? (
@@ -182,11 +182,6 @@ InvoiceRow.propTypes = {
   isSelected: PropTypes.bool,
   /** Callback to toggle selection */
   onToggleSelection: PropTypes.func
-};
-
-InvoiceRow.defaultProps = {
-  isSelected: false,
-  onToggleSelection: null
 };
 
 // Memoize to prevent re-renders when other invoices change

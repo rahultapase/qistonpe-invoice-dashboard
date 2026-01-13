@@ -10,7 +10,9 @@ import {
   getDaysUntilDue,
   getDaysOverdue,
   getPaymentDelay,
-  parseDate
+  parseDate,
+  calculateDueDate,
+  toISODateString
 } from './dateUtils';
 
 import {
@@ -36,17 +38,17 @@ import {
  */
 export function calculateStatus(invoice) {
   if (!invoice) return INVOICE_STATUS.PENDING;
-  
+
   // If payment date exists, invoice is paid
   if (invoice.paymentDate) {
     return INVOICE_STATUS.PAID;
   }
-  
+
   // Check if overdue (due date is in the past)
   if (isOverdue(invoice.dueDate)) {
     return INVOICE_STATUS.OVERDUE;
   }
-  
+
   // Otherwise, it's pending
   return INVOICE_STATUS.PENDING;
 }
@@ -65,49 +67,49 @@ export function getDaysDisplay(invoice) {
   if (!invoice) {
     return { text: '-', colorClass: 'text-gray-500' };
   }
-  
+
   const status = invoice.status || calculateStatus(invoice);
-  
+
   switch (status) {
     case INVOICE_STATUS.PAID: {
       const delay = getPaymentDelay(invoice.dueDate, invoice.paymentDate);
-      
+
       if (delay === 0) {
         return { text: 'Paid on time', colorClass: 'text-green-600' };
       } else if (delay < 0) {
-        return { 
-          text: `Paid ${Math.abs(delay)} days early`, 
-          colorClass: 'text-green-600' 
+        return {
+          text: `Paid ${Math.abs(delay)} days early`,
+          colorClass: 'text-green-600'
         };
       } else {
-        return { 
-          text: `Paid ${delay} days late`, 
-          colorClass: 'text-orange-600' 
+        return {
+          text: `Paid ${delay} days late`,
+          colorClass: 'text-orange-600'
         };
       }
     }
-    
+
     case INVOICE_STATUS.OVERDUE: {
       const daysOverdue = getDaysOverdue(invoice.dueDate);
-      return { 
-        text: `Overdue by ${daysOverdue} day${daysOverdue !== 1 ? 's' : ''}`, 
-        colorClass: 'text-red-600' 
+      return {
+        text: `Overdue by ${daysOverdue} day${daysOverdue !== 1 ? 's' : ''}`,
+        colorClass: 'text-red-600'
       };
     }
-    
+
     case INVOICE_STATUS.PENDING: {
       const daysUntil = getDaysUntilDue(invoice.dueDate);
-      
+
       if (daysUntil === 0) {
         return { text: 'Due today', colorClass: 'text-yellow-600' };
       }
-      
-      return { 
-        text: `Due in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`, 
-        colorClass: 'text-blue-600' 
+
+      return {
+        text: `Due in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`,
+        colorClass: 'text-blue-600'
       };
     }
-    
+
     default:
       return { text: '-', colorClass: 'text-gray-500' };
   }
@@ -128,7 +130,7 @@ export function formatCurrencyINR(amount) {
   if (amount === null || amount === undefined || isNaN(amount)) {
     return `${CURRENCY.SYMBOL}0`;
   }
-  
+
   try {
     const formatter = new Intl.NumberFormat(CURRENCY.LOCALE, {
       style: 'currency',
@@ -136,7 +138,7 @@ export function formatCurrencyINR(amount) {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     });
-    
+
     return formatter.format(amount);
   } catch (error) {
     // Fallback formatting
@@ -154,7 +156,7 @@ export function formatCurrencyINR(amount) {
 export function filterByStatus(invoices, status) {
   if (!Array.isArray(invoices)) return [];
   if (!status || status === 'all') return invoices;
-  
+
   return invoices.filter(invoice => {
     const invoiceStatus = invoice.status || calculateStatus(invoice);
     return invoiceStatus === status;
@@ -171,46 +173,46 @@ export function filterByStatus(invoices, status) {
  */
 export function sortInvoices(invoices, field, direction = 'desc') {
   if (!Array.isArray(invoices) || invoices.length === 0) return [];
-  
+
   const sorted = [...invoices].sort((a, b) => {
     let valueA, valueB;
-    
+
     switch (field) {
       case 'amount':
         valueA = Number(a.amount) || 0;
         valueB = Number(b.amount) || 0;
         break;
-        
+
       case 'invoiceDate':
       case 'dueDate':
       case 'paymentDate':
         valueA = parseDate(a[field])?.getTime() || 0;
         valueB = parseDate(b[field])?.getTime() || 0;
         break;
-        
+
       case 'customerName':
         valueA = (a.customerName || '').toLowerCase();
         valueB = (b.customerName || '').toLowerCase();
-        return direction === 'asc' 
+        return direction === 'asc'
           ? valueA.localeCompare(valueB)
           : valueB.localeCompare(valueA);
-        
+
       case 'id':
         // Extract numeric part for proper sorting
         valueA = extractNumericId(a.id);
         valueB = extractNumericId(b.id);
         break;
-        
+
       default:
         return 0;
     }
-    
+
     if (direction === 'asc') {
       return valueA - valueB;
     }
     return valueB - valueA;
   });
-  
+
   return sorted;
 }
 
@@ -225,24 +227,24 @@ export function sortInvoices(invoices, field, direction = 'desc') {
 export function searchInvoices(invoices, query) {
   if (!Array.isArray(invoices)) return [];
   if (!query || typeof query !== 'string') return invoices;
-  
+
   // Normalize query: trim, lowercase, and remove extra spaces
   const normalizedQuery = query.trim().toLowerCase().replace(/\s+/g, ' ');
-  
+
   if (!normalizedQuery) return invoices;
-  
+
   return invoices.filter(invoice => {
     // Normalize invoice ID (handle both INV-001 and inv-001)
     const invoiceId = (invoice.id || '').toLowerCase().replace(/\s+/g, '');
     // Also check without hyphen for loose matching
     const invoiceIdNoHyphen = invoiceId.replace(/-/g, '');
-    
+
     // Normalize customer name
     const customerName = (invoice.customerName || '').toLowerCase();
-    
+
     // Normalize query without hyphen for matching
     const queryNoHyphen = normalizedQuery.replace(/-/g, '').replace(/\s+/g, '');
-    
+
     return (
       invoiceId.includes(normalizedQuery) ||
       invoiceIdNoHyphen.includes(queryNoHyphen) ||
@@ -278,17 +280,17 @@ export function generateInvoiceId(existingInvoices) {
   if (!Array.isArray(existingInvoices) || existingInvoices.length === 0) {
     return `${ID_CONFIG.PREFIX}001`;
   }
-  
+
   // Find the maximum numeric ID
   const maxId = existingInvoices.reduce((max, invoice) => {
     const numericId = extractNumericId(invoice.id);
     return numericId > max ? numericId : max;
   }, 0);
-  
+
   // Increment and pad
   const nextId = maxId + 1;
   const paddedId = String(nextId).padStart(ID_CONFIG.PAD_LENGTH, '0');
-  
+
   return `${ID_CONFIG.PREFIX}${paddedId}`;
 }
 
@@ -300,7 +302,7 @@ export function generateInvoiceId(existingInvoices) {
  */
 export function validateInvoice(invoice) {
   const errors = {};
-  
+
   // Customer name validation
   if (!invoice.customerName || typeof invoice.customerName !== 'string') {
     errors.customerName = 'Customer name is required';
@@ -309,7 +311,7 @@ export function validateInvoice(invoice) {
   } else if (invoice.customerName.trim().length > 100) {
     errors.customerName = 'Customer name must be less than 100 characters';
   }
-  
+
   // Amount validation
   if (invoice.amount === undefined || invoice.amount === null || invoice.amount === '') {
     errors.amount = 'Amount is required';
@@ -320,7 +322,7 @@ export function validateInvoice(invoice) {
   } else if (Number(invoice.amount) > 10000000) {
     errors.amount = 'Amount cannot exceed ₹1,00,00,000';
   }
-  
+
   // Invoice date validation
   if (!invoice.invoiceDate) {
     errors.invoiceDate = 'Invoice date is required';
@@ -332,7 +334,7 @@ export function validateInvoice(invoice) {
       errors.invoiceDate = 'Invoice date cannot be in the future';
     }
   }
-  
+
   // Payment terms validation
   const validTerms = [7, 15, 30, 45, 60];
   if (!invoice.paymentTerms) {
@@ -340,7 +342,7 @@ export function validateInvoice(invoice) {
   } else if (!validTerms.includes(Number(invoice.paymentTerms))) {
     errors.paymentTerms = 'Invalid payment terms selected';
   }
-  
+
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -356,10 +358,8 @@ export function validateInvoice(invoice) {
  * @returns {Object} - Complete invoice object ready for saving
  */
 export function prepareInvoiceForSave(invoice, existingInvoices = []) {
-  const { calculateDueDate, toISODateString } = require('./dateUtils');
-  
   const dueDate = calculateDueDate(invoice.invoiceDate, Number(invoice.paymentTerms));
-  
+
   return {
     id: invoice.id || generateInvoiceId(existingInvoices),
     customerName: invoice.customerName.trim(),
@@ -368,8 +368,8 @@ export function prepareInvoiceForSave(invoice, existingInvoices = []) {
     paymentTerms: Number(invoice.paymentTerms),
     dueDate: dueDate,
     paymentDate: invoice.paymentDate || null,
-    status: invoice.paymentDate ? INVOICE_STATUS.PAID : 
-            (dueDate && new Date(dueDate) < new Date() ? INVOICE_STATUS.OVERDUE : INVOICE_STATUS.PENDING)
+    status: invoice.paymentDate ? INVOICE_STATUS.PAID :
+      (dueDate && new Date(dueDate) < new Date() ? INVOICE_STATUS.OVERDUE : INVOICE_STATUS.PENDING)
   };
 }
 
@@ -381,10 +381,8 @@ export function prepareInvoiceForSave(invoice, existingInvoices = []) {
  * @returns {Object} - Updated invoice object
  */
 export function markInvoiceAsPaid(invoice, paymentDate = null) {
-  const { toISODateString } = require('./dateUtils');
-  
   const actualPaymentDate = paymentDate || toISODateString(new Date());
-  
+
   return {
     ...invoice,
     paymentDate: actualPaymentDate,
@@ -402,7 +400,7 @@ export function getStatusCounts(invoices) {
   if (!Array.isArray(invoices)) {
     return { paid: 0, pending: 0, overdue: 0, total: 0 };
   }
-  
+
   return invoices.reduce((counts, invoice) => {
     const status = invoice.status || calculateStatus(invoice);
     counts[status] = (counts[status] || 0) + 1;

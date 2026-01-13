@@ -13,7 +13,7 @@ import { STATUS_FILTER_OPTIONS } from '../../constants/invoiceConstants';
  * @param {Function} props.onStatusChange - Callback when status changes
  * @param {Object} props.counts - Optional counts for each status
  */
-function StatusFilter({ activeStatus, onStatusChange, counts }) {
+function StatusFilter({ activeStatus, onStatusChange, counts = null }) {
   return (
     <div 
       className="flex flex-wrap gap-2"
@@ -79,10 +79,6 @@ StatusFilter.propTypes = {
     pending: PropTypes.number,
     overdue: PropTypes.number
   })
-};
-
-StatusFilter.defaultProps = {
-  counts: null
 };
 
 export default memo(StatusFilter);

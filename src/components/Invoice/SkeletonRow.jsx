@@ -51,10 +51,6 @@ SkeletonRow.propTypes = {
   hasSelection: PropTypes.bool
 };
 
-SkeletonRow.defaultProps = {
-  hasSelection: false
-};
-
 /**
  * SkeletonTable Component
  * 
@@ -79,11 +75,6 @@ SkeletonTable.propTypes = {
   rows: PropTypes.number,
   /** Whether selection column should be shown */
   hasSelection: PropTypes.bool
-};
-
-SkeletonTable.defaultProps = {
-  rows: 5,
-  hasSelection: false
 };
 
 export default memo(SkeletonRow);

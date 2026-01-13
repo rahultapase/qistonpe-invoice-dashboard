@@ -46,10 +46,4 @@ Container.propTypes = {
   noPadding: PropTypes.bool
 };
 
-Container.defaultProps = {
-  className: '',
-  narrow: false,
-  noPadding: false
-};
-
 export default Container;

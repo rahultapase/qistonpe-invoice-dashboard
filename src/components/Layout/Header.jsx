@@ -11,7 +11,7 @@ import { FileText } from 'lucide-react';
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.actions - Optional action buttons (e.g., Add Invoice)
  */
-function Header({ actions }) {
+function Header({ actions = null }) {
   return (
     <header 
       className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-200"
@@ -55,10 +55,6 @@ function Header({ actions }) {
 Header.propTypes = {
   /** Optional action buttons to display in the header (e.g., Add Invoice button) */
   actions: PropTypes.node
-};
-
-Header.defaultProps = {
-  actions: null
 };
 
 export default Header;

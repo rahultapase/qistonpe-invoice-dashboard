@@ -62,7 +62,7 @@ function SortDropdown({ value, onChange }) {
         onClick={() => setIsOpen(!isOpen)}
         className={`
           flex items-center justify-between gap-2
-          w-full sm:w-52
+          w-full sm:w-64
           px-3 py-2
           text-sm font-medium text-gray-700 dark:text-gray-200
           bg-white dark:bg-gray-700 
@@ -78,7 +78,7 @@ function SortDropdown({ value, onChange }) {
       >
         <div className="flex items-center gap-2 min-w-0">
           <ArrowUpDown className="h-4 w-4 text-gray-400 flex-shrink-0" />
-          <span className="truncate">{selectedOption.label}</span>
+          <span>{selectedOption.label}</span>
         </div>
         <ChevronDown 
           className={`h-4 w-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
@@ -88,7 +88,7 @@ function SortDropdown({ value, onChange }) {
       {/* Dropdown Menu */}
       {isOpen && (
         <div 
-          className="absolute right-0 z-20 mt-1 w-full sm:w-52 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg py-1 animate-fade-in"
+          className="absolute right-0 z-20 mt-1 w-full sm:w-64 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg py-1 animate-fade-in"
           role="listbox"
           aria-label="Sort options"
         >

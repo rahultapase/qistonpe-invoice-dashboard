@@ -24,7 +24,7 @@ import { X } from 'lucide-react';
 function Modal({
   isOpen,
   onClose,
-  title,
+  title = '',
   children,
   size = 'md',
   showCloseButton = true
@@ -68,13 +68,13 @@ function Modal({
     if (isOpen) {
       // Store current active element
       previousActiveElement.current = document.activeElement;
-      
+
       // Lock body scroll
       document.body.style.overflow = 'hidden';
-      
+
       // Add escape key listener
       document.addEventListener('keydown', handleEscapeKey);
-      
+
       // Focus the modal
       setTimeout(() => {
         modalRef.current?.focus();
@@ -82,10 +82,10 @@ function Modal({
     } else {
       // Unlock body scroll
       document.body.style.overflow = '';
-      
+
       // Remove escape key listener
       document.removeEventListener('keydown', handleEscapeKey);
-      
+
       // Restore focus to previous element
       previousActiveElement.current?.focus();
     }
@@ -108,7 +108,7 @@ function Modal({
     const focusableElements = modal.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
+
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
@@ -143,7 +143,7 @@ function Modal({
       />
 
       {/* Modal Positioning */}
-      <div 
+      <div
         className="flex min-h-full items-center justify-center p-4"
         onClick={handleBackdropClick}
       >
@@ -162,16 +162,16 @@ function Modal({
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-t-xl">
               {title && (
-                <h2 
-                  id="modal-title" 
+                <h2
+                  id="modal-title"
                   className="text-lg font-semibold text-gray-900 dark:text-gray-100"
                 >
                   {title}
                 </h2>
               )}
-              
+
               {showCloseButton && (
                 <button
                   type="button"
@@ -215,12 +215,6 @@ Modal.propTypes = {
   size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl', 'full']),
   /** Whether to show the close (X) button */
   showCloseButton: PropTypes.bool
-};
-
-Modal.defaultProps = {
-  title: '',
-  size: 'md',
-  showCloseButton: true
 };
 
 export default memo(Modal);

@@ -15,7 +15,7 @@ import SummaryCard from './SummaryCard';
  * @param {Array} props.summaryCards - Array of card data from useSummaryStats
  * @param {boolean} props.isLoading - Show loading skeleton
  */
-function SummarySection({ summaryCards, isLoading }) {
+function SummarySection({ summaryCards, isLoading = false }) {
   // Loading skeleton
   if (isLoading) {
     return (
@@ -99,10 +99,6 @@ SummarySection.propTypes = {
   ).isRequired,
   /** Whether to show loading skeleton */
   isLoading: PropTypes.bool
-};
-
-SummarySection.defaultProps = {
-  isLoading: false
 };
 
 export default SummarySection;

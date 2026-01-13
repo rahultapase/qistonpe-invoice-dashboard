@@ -30,25 +30,25 @@ import BulkActions from './BulkActions';
  */
 function InvoiceList({
   invoices,
-  isLoading,
+  isLoading = false,
   statusFilter,
   onStatusFilterChange,
   searchQuery,
   onSearchChange,
   sortOption,
   onSortChange,
-  statusCounts,
+  statusCounts = null,
   onMarkAsPaid,
-  selectedIds,
-  onToggleSelection,
-  isSelected,
-  onSelectAll,
-  onDeselectAll,
-  onBulkMarkPaid
+  selectedIds = new Set(),
+  onToggleSelection = null,
+  isSelected = null,
+  onSelectAll = null,
+  onDeselectAll = null,
+  onBulkMarkPaid = null
 }) {
   // Determine if filters are active
   const hasActiveFilters = statusFilter !== 'all' || searchQuery.trim() !== '';
-  
+
   // Handle clearing filters
   const handleClearFilters = () => {
     onStatusFilterChange('all');
@@ -79,7 +79,7 @@ function InvoiceList({
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
       />
-      
+
       {/* Bulk Actions Bar - shows when items selected */}
       {selectedIds && selectedIds.size > 0 && (
         <BulkActions
@@ -91,7 +91,7 @@ function InvoiceList({
           showSelectAll={false}
         />
       )}
-      
+
       {/* Invoice Table */}
       <InvoiceTable
         invoices={invoices}
@@ -102,6 +102,8 @@ function InvoiceList({
         selectedIds={selectedIds}
         onToggleSelection={onToggleSelection}
         isSelected={isSelected}
+        onSelectAll={onSelectAll}
+        onDeselectAll={onDeselectAll}
       />
     </section>
   );
@@ -140,17 +142,6 @@ InvoiceList.propTypes = {
   onDeselectAll: PropTypes.func,
   /** Callback for bulk mark as paid */
   onBulkMarkPaid: PropTypes.func
-};
-
-InvoiceList.defaultProps = {
-  isLoading: false,
-  statusCounts: null,
-  selectedIds: new Set(),
-  onToggleSelection: null,
-  isSelected: null,
-  onSelectAll: null,
-  onDeselectAll: null,
-  onBulkMarkPaid: null
 };
 
 export default memo(InvoiceList);
