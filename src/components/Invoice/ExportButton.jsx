@@ -23,7 +23,7 @@ function ExportButton({ invoices = [], filename = null, disabled = false }) {
     if (!invoices || invoices.length === 0) {
       return;
     }
-    
+
     exportInvoicesToCSV(invoices, filename, {
       includeStatus: true,
       formatCurrency: false
@@ -42,7 +42,6 @@ function ExportButton({ invoices = [], filename = null, disabled = false }) {
       title={isDisabled ? 'No invoices to export' : `Export ${invoices.length} invoices to CSV`}
     >
       <span className="hidden sm:inline">Export CSV</span>
-      <span className="sm:hidden">Export</span>
     </Button>
   );
 }

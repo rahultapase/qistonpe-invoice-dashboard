@@ -19,20 +19,40 @@ import { Search, X } from 'lucide-react';
  * @param {string} props.placeholder - Placeholder text
  * @param {number} props.debounceMs - Debounce delay in milliseconds
  */
-function SearchBar({ 
-  value, 
-  onChange, 
+function SearchBar({
+  value,
+  onChange,
   placeholder = 'Search by invoice number or customer name',
-  debounceMs = 300 
+  debounceMs = 300
 }) {
   // Local state for immediate input updates
   const [localValue, setLocalValue] = useState(value);
   
+  // State for responsive placeholder
+  const [isMobile, setIsMobile] = useState(false);
+
   // Ref for debounce timeout
   const debounceRef = useRef(null);
-  
+
   // Ref for input element (for focus management)
   const inputRef = useRef(null);
+  
+  /**
+   * Check if screen is mobile size
+   */
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint
+    };
+    
+    // Check on mount
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   /**
    * Sync local value with external value
@@ -58,15 +78,15 @@ function SearchBar({
    */
   const handleChange = useCallback((e) => {
     const newValue = e.target.value;
-    
+
     // Update local state immediately for responsive UI
     setLocalValue(newValue);
-    
+
     // Clear existing timeout
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
-    
+
     // Set new timeout for debounced callback
     debounceRef.current = setTimeout(() => {
       onChange(newValue);
@@ -79,12 +99,12 @@ function SearchBar({
   const handleClear = useCallback(() => {
     setLocalValue('');
     onChange('');
-    
+
     // Clear any pending debounce
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
-    
+
     // Focus the input after clearing
     inputRef.current?.focus();
   }, [onChange]);
@@ -100,17 +120,20 @@ function SearchBar({
   }, [localValue, handleClear]);
 
   const hasValue = localValue.length > 0;
+  
+  // Responsive placeholder text
+  const displayPlaceholder = isMobile ? 'Search invoices...' : placeholder;
 
   return (
-    <div className="relative w-full sm:w-80">
+    <div className="relative w-full sm:w-96">{/* Increased from sm:w-80 to sm:w-96 (384px) */}
       {/* Search Icon */}
-      <div 
+      <div
         className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
         aria-hidden="true"
       >
         <Search className="h-4 w-4 text-gray-400 dark:text-gray-500" />
       </div>
-      
+
       {/* Input Field */}
       <input
         ref={inputRef}
@@ -118,7 +141,7 @@ function SearchBar({
         value={localValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
+        placeholder={displayPlaceholder}
         className={`
           block w-full 
           pl-10 pr-10 py-2
@@ -133,7 +156,7 @@ function SearchBar({
         autoComplete="off"
         spellCheck="false"
       />
-      
+
       {/* Clear Button */}
       {hasValue && (
         <button

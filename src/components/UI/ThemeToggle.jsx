@@ -20,8 +20,8 @@ function ThemeToggle({ isDarkMode, onToggle }) {
       className={`
         p-2 rounded-lg transition-colors duration-200
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-        ${isDarkMode 
-          ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600 focus:ring-offset-gray-800' 
+        ${isDarkMode
+          ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600 focus:ring-offset-gray-800'
           : 'bg-gray-100 text-gray-600 hover:bg-gray-200 focus:ring-offset-white'
         }
       `}

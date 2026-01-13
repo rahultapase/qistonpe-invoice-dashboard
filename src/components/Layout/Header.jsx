@@ -13,7 +13,7 @@ import { FileText } from 'lucide-react';
  */
 function Header({ actions = null }) {
   return (
-    <header 
+    <header
       className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-200"
       role="banner"
     >
@@ -22,13 +22,13 @@ function Header({ actions = null }) {
           {/* Logo and Title */}
           <div className="flex items-center gap-3">
             {/* Logo Icon */}
-            <div 
+            <div
               className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white"
               aria-hidden="true"
             >
               <FileText className="w-5 h-5" />
             </div>
-            
+
             {/* Brand Text */}
             <div className="flex flex-col">
               <h1 className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 leading-tight">
